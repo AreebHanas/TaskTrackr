@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TaskTrackr Redefined</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    /* Reset & basics */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      scroll-behavior: smooth;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle, #0f0c29, #1a1a40);
+      color: white;
+      overflow-x: hidden;
+    }
+    /* Remove old nav styles */
+    /* Sections */
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 6rem 2rem 4rem; /* top padding adjusted for navbar */
+      text-align: center;
+    }
+    h1, h2, h3, p {
+      margin-bottom: 1rem;
+    }
+    /* Hero */
+    .hero {
+      background: radial-gradient(circle at center, #1a1a40, #0f0c29);
+      position: relative;
+      overflow: hidden;
+      flex-direction: row;
+      text-align: left;
+      gap: 3rem;
+      align-items: center;
+    }
+    .hero-content {
+      max-width: 600px;
+      z-index: 1;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      background: linear-gradient(90deg, #7f00ff, #e100ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero .typing-text {
+      font-size: 1.5rem;
+      height: 2rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+    .hero .typing-text span {
+      border-right: 2px solid white;
+      padding-right: 5px;
+      animation: blink 0.7s step-end infinite;
+    }
+    @keyframes blink {
+      from, to { border-color: transparent; }
+      50% { border-color: white; }
+    }
+    .hero p {
+      color: #ccc;
+      margin-bottom: 2rem;
+    }
+    .floating-animation {
+      width: 450px;
+    }
+    /* CTA Button */
+    .cta-button {
+      background: linear-gradient(to right, #7f00ff, #e100ff);
+      border: none;
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 700;
+      padding: 1rem 3rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 5px 15px rgba(127, 0, 255, 0.7);
+    }
+    .cta-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(225, 0, 255, 0.9);
+    }
+    /* Other sections */
+    .feature-section, .insight-section, .call-to-action {
+      position: relative;
+    }
+    .feature-img, .insight-img {
+      width: 300px;
+      margin: 2rem 0;
+    }
+    .gradient-bg {
+      background: linear-gradient(120deg, #ff6ec4 0%, #7873f5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    button {
+      padding: 1rem 2rem;
+      background: linear-gradient(to right, #7f00ff, #e100ff);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    /* header */
+    .main-header {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 999;
+      padding: 1rem 2rem;
+      background: rgba(15, 12, 41, 0.8);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .header-wrapper {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #7f00ff, #e100ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    }
+    .main-nav {
+      display: flex;
+      gap: 2rem;
+      flex: 1;
+      justify-content: center;
+      flex-wrap: wrap;
+      transition: none;
+      position: static;
+      background: none;
+      box-shadow: none;
+      pointer-events: auto;
+      opacity: 1;
+      transform: none;
+      align-items: center;
+      padding: 0;
+    }
+    .main-nav a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #aaa;
+      transition: color 0.3s ease;
+      padding: 0.5rem 0.75rem;
+      border-bottom: none;
+      width: auto;
+      display: inline-block;
+    }
+    .main-nav a:hover {
+      color: #e100ff;
+    }
+    .header-btn {
+      padding: 0.5rem 1.25rem;
+      background: #e100ff;
+      border: none;
+      color: white;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .header-btn:hover {
+      background: #7f00ff;
+    }
+    /* Hamburger menu styles - only one definition, mobile only */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1100;
+    }
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 3px;
+      margin: 4px 0;
+      background: #e100ff;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+    @media screen and (max-width: 900px) {
+      .header-wrapper {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      .header-wrapper {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 0;
+      }
+      .logo {
+        font-size: 1.25rem;
+      }
+      .main-nav {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        width: 100vw;
+        background: rgba(15, 12, 41, 0.97);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 1rem 2rem;
+        transform: translateY(-120%);
+        transition: transform 0.3s ease, opacity 0.3s;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        pointer-events: none;
+        opacity: 0;
+        z-index: 1200;
+      }
+      .main-nav.open {
+        transform: translateY(0);
+        pointer-events: auto;
+        opacity: 1;
+      }
+      .main-nav a {
+        padding: 1rem 0;
+        width: 100%;
+        color: #fff;
+        border-bottom: 1px solid #222;
+        display: block;
+      }
+      .header-btn {
+        display: none;
+      }
+      .hamburger {
+        display: flex !important;
+      }
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+      nav ul {
+        gap: 1rem;
+      }
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .feature-img, .insight-img {
+        width: 100%;
+      }
+      .floating-animation {
+        width: 100%;
+        max-width: 320px;
+      }
+    }
+
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+    }
+    /* Mobile responsiveness */
+    @media screen and (max-width: 900px) {
+      .header-wrapper {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      .header-wrapper {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 0;
+      }
+      .logo {
+        font-size: 1.25rem;
+      }
+      .main-nav {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        width: 100vw;
+        background: rgba(15, 12, 41, 0.97);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 1rem 2rem;
+        transform: translateY(-120%);
+        transition: transform 0.3s ease, opacity 0.3s;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        pointer-events: none;
+        opacity: 0;
+        z-index: 1200;
+      }
+      .main-nav.open {
+        transform: translateY(0);
+        pointer-events: auto;
+        opacity: 1;
+      }
+      .main-nav a {
+        padding: 1rem 0;
+        width: 100%;
+        color: #fff;
+        border-bottom: 1px solid #222;
+        display: block;
+      }
+      .header-btn {
+        display: none;
+      }
+      .hamburger {
+        display: flex !important;
+      }
+    }
+  </style>
+</head>
+<header class="main-header">
+  <div class="header-wrapper">
+    <div class="logo">🚀 TaskTrackr</div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="main-nav" id="mainNav">
+      <a href="#hero">Home</a>
+      <a href="#features">Features</a>
+      <a href="#insights">Insights</a>
+      <a href="#cta">Start</a>
+    </nav>
+    <button class="header-btn">Login</button>
+  </div>
+</header>
+<body>
+  <canvas id="bgCanvas"></canvas>
+    <script>
+  const canvas = document.getElementById("bgCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const blobs = Array.from({length: 12}).map(() => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: 80 + Math.random() * 120,
+    dx: (Math.random() - 0.5) * 0.3,
+    dy: (Math.random() - 0.5) * 0.3,
+    color: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    blobs.forEach(b => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fillStyle = b.color;
+      ctx.shadowColor = b.color;
+      ctx.shadowBlur = 60;
+      ctx.fill();
+      ctx.restore();
+      b.x += b.dx;
+      b.y += b.dy;
+      if (b.x < -b.r) b.x = canvas.width + b.r;
+      if (b.x > canvas.width + b.r) b.x = -b.r;
+      if (b.y < -b.r) b.y = canvas.height + b.r;
+      if (b.y > canvas.height + b.r) b.y = -b.r;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
+
+  <section id="hero" class="hero">
+    <div class="hero-content">
+      <h1>TaskTrackr</h1>
+      <div class="typing-text"><span id="typing"></span></div>
+      <p>Your productivity assistant, designed for the next generation of creators.</p>
+      <button class="cta-button" onclick="alert('Get Started clicked!')">Get Started</button>
+    </div>
+    <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_zrqthn6o.json" background="transparent" speed="1" loop autoplay class="floating-animation"></lottie-player>
+  </section>
+
+  <section id="features" class="feature-section">
+  <h2 class="gradient-bg">Custom Workflows</h2>
+  <!-- <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_s1qfhxsb.json" background="transparent" speed="1" loop autoplay class="feature-img"></lottie-player> -->
+  <p>Create, organize and manage tasks with visual drag-and-drop interfaces and real-time sync.</p>
+
+  <div class="features-details">
+    <div class="feature-item">
+      <div class="icon">⚙️</div>
+      <h3>Highly Customizable</h3>
+      <p>Build workflows that fit your unique style — no cookie-cutter stuff here. Adapt on the fly.</p>
+    </div>
+    <div class="feature-item">
+      <div class="icon">🌐</div>
+      <h3>Real-Time Collaboration</h3>
+      <p>Work with your team seamlessly. Updates sync instantly across devices, so no one’s left behind.</p>
+    </div>
+    <div class="feature-item">
+      <div class="icon">📈</div>
+      <h3>Data-Driven Insights</h3>
+      <p>Get smart analytics that help you spot bottlenecks, trends, and opportunities to optimize.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .features-details {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 900px;
+  }
+  .feature-item {
+    background: rgba(255 255 255 / 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    flex: 1 1 250px;
+    box-shadow: 0 4px 20px rgba(127, 0, 255, 0.3);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .feature-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(225, 0, 255, 0.6);
+  }
+  .feature-item .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  .feature-item h3 {
+    margin-bottom: 0.75rem;
+    color: #e100ff;
+  }
+  .feature-item p {
+    color: #bbb;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+</style>
+
+<script>
+  // Animate each feature-item on scroll
+  gsap.utils.toArray(".feature-item").forEach((item) => {
+    gsap.from(item, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: item,
+        start: "top 80%",
+        toggleActions: "play none none reverse"
+      }
+    });
+  });
+</script>
+
+
+<section id="insights" class="insight-section">
+  <h2 class="gradient-bg">Visual Analytics</h2>
+  <!-- <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_nwi1m5u5.json" background="transparent" speed="1" loop autoplay class="insight-img"></lottie-player> -->
+  <p>Turn your task data into clear, actionable insights using interactive dashboards and animations.</p>
+
+  <div class="insights-details">
+    <div class="insight-item">
+      <div class="icon">📊</div>
+      <h3>Interactive Dashboards</h3>
+      <p>Customize your analytics view with drag-and-drop widgets that update in real-time as your data changes.</p>
+    </div>
+    <div class="insight-item">
+      <div class="icon">🔔</div>
+      <h3>Smart Notifications</h3>
+      <p>Receive alerts based on key performance metrics so you never miss critical updates or deadlines.</p>
+    </div>
+    <div class="insight-item">
+      <div class="icon">📅</div>
+      <h3>Trend Analysis Over Time</h3>
+      <p>Visualize how your productivity and workflows evolve with intuitive charts spanning days, weeks, or months.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .insights-details {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 900px;
+  }
+  .insight-item {
+    background: rgba(255 255 255 / 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    flex: 1 1 250px;
+    box-shadow: 0 4px 20px rgba(127, 0, 255, 0.3);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .insight-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(225, 0, 255, 0.6);
+  }
+  .insight-item .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  .insight-item h3 {
+    margin-bottom: 0.75rem;
+    color: #e100ff;
+  }
+  .insight-item p {
+    color: #bbb;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+</style>
+
+<script>
+  // Animate each insight-item on scroll
+  gsap.utils.toArray(".insight-item").forEach((item) => {
+    gsap.from(item, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: item,
+        start: "top 80%",
+        toggleActions: "play none none reverse"
+      }
+    });
+  });
+</script>
+
+
+  <section id="cta" class="call-to-action">
+    <h2 class="gradient-bg">Ready to level up?</h2>
+    <p>Join hundreds already building faster, better workflows.</p>
+    <button>Get Started</button>
+  </section>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray("section").forEach((sec) => {
+      gsap.from(sec.children, {
+        opacity: 0,
+        y: 100,
+        duration: 1.2,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sec,
+          start: "top 75%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    });
+
+    const words = [
+      { text: "Smart Planning", color: "#ff6ec4" },
+      { text: "Real-Time Sync", color: "#00e0ff" },
+      { text: "Creative Control", color: "#00ff7f" }
+    ];
+
+    const typingElement = document.getElementById("typing");
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function type() {
+      const current = words[wordIndex];
+      const visibleText = current.text.substring(0, charIndex);
+      typingElement.innerHTML = `<span style="color: ${current.color}">${visibleText}</span>`;
+
+      if (!isDeleting) {
+        if (charIndex < current.text.length) {
+          charIndex++;
+          setTimeout(type, 100);
+        } else {
+          isDeleting = true;
+          setTimeout(type, 1000);
+        }
+      } else {
+        if (charIndex > 0) {
+          charIndex--;
+          setTimeout(type, 50);
+        } else {
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          setTimeout(type, 300);
+        }
+      }
+    }
+
+    type();
+  </script>
+</body>
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">TaskTrackr &copy; 2025</div>
+    <div class="footer-info">
+      <p>Your productivity assistant crafted with care. Contact us at support@tasktrackr.com</p>
+    </div>
+    <div class="footer-socials">
+      <a href="#" aria-label="Twitter">🐦</a>
+      <a href="#" aria-label="LinkedIn">🔗</a>
+      <a href="#" aria-label="GitHub">🐙</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: linear-gradient(90deg, #1a1a40, #0f0c29);
+    border-top: 2px solid #7f00ff;
+    padding: 1.5rem 2rem;
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  .footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .footer-brand {
+    font-weight: 700;
+    color: #e100ff;
+  }
+  .footer-nav {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  .footer-nav li a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .footer-nav li a:hover {
+    color: #e100ff;
+  }
+  .footer-socials a {
+    color: #aaa;
+    margin-left: 1rem;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .footer-socials a:hover {
+    color: #e100ff;
+  }
+  @media (max-width: 600px) {
+    .footer-container {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.5rem;
+    }
+    .footer-socials a {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+// Hamburger menu toggle
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mainNav = document.getElementById('mainNav');
+hamburgerBtn.addEventListener('click', function() {
+  const isOpen = mainNav.classList.toggle('open');
+  hamburgerBtn.classList.toggle('active');
+  hamburgerBtn.setAttribute('aria-expanded', isOpen);
+});
+
+// Close nav on link click (mobile)
+mainNav.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      mainNav.classList.remove('open');
+      hamburgerBtn.classList.remove('active');
+      hamburgerBtn.setAttribute('aria-expanded', false);
+    }
+  });
+});
+</script>
+
+<script>
+// Bokeh/Blob animated background (on bgCanvas)
+(function() {
+  const canvas = document.getElementById('bgCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+
+  const colors = [
+    'rgba(127,0,255,0.18)',
+    'rgba(225,0,255,0.13)',
+    'rgba(0,224,255,0.12)',
+    'rgba(255,110,196,0.10)',
+    'rgba(0,255,127,0.10)'
+  ];
+  const blobs = Array.from({length: 12}).map(() => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    r: 80 + Math.random() * 120,
+    dx: (Math.random() - 0.5) * 0.3,
+    dy: (Math.random() - 0.5) * 0.3,
+    color: colors[Math.floor(Math.random() * colors.length)]
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    blobs.forEach(b => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fillStyle = b.color;
+      ctx.shadowColor = b.color;
+      ctx.shadowBlur = 60;
+      ctx.fill();
+      ctx.restore();
+      b.x += b.dx;
+      b.y += b.dy;
+      if (b.x < -b.r) b.x = width + b.r;
+      if (b.x > width + b.r) b.x = -b.r;
+      if (b.y < -b.r) b.y = height + b.r;
+      if (b.y > height + b.r) b.y = -b.r;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize', () => {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  });
+})();
+</script>
+
+</html>
